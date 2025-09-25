@@ -40,7 +40,9 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "apps.core.apps.CoreConfig",
+]
 
 THIRD_PARTY_APPS = [
     "simple_history",
