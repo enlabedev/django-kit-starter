@@ -34,8 +34,13 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.cache.CachePanel",
 ]
 
+
+def show_toolbar(request):
+    return request.META.get("REMOTE_ADDR") in INTERNAL_IPS
+
+
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
     "IS_RUNNING_TESTS": False,
 }
 

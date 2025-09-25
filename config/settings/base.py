@@ -13,9 +13,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DOTENV_PATH = BASE_DIR / ".env"
 load_dotenv(DOTENV_PATH)
 
-SECRET_KEY = config("SECRET_KEY", default="secret-key")
+SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="*")
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=Csv(), default="localhost,127.0.0.1"
+)
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     default="http://127.0.0.1,http://localhost,https://localhost",
