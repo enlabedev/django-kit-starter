@@ -15,19 +15,16 @@ class UserIPMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Get user's IP address
         user_ip = self.get_client_ip(request)
 
-        # Store IP in session for later use
         request.session["user_ip"] = user_ip
 
         response = self.get_response(request)
 
-        # Update user's last_login_ip after successful authentication
         if hasattr(request, "user") and request.user.is_authenticated:
             try:
                 user = request.user
-                if user.last_login_ip != user_ip:
+                if user_ip and user.last_login_ip != user_ip:
                     user.last_login_ip = user_ip
                     user.save(update_fields=["last_login_ip"])
             except Exception as e:

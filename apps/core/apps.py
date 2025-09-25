@@ -1,3 +1,5 @@
+import logging
+
 from django.apps import AppConfig
 
 
@@ -9,5 +11,5 @@ class CoreConfig(AppConfig):
         try:
             import apps.core.signals  # noqa: F401
         except ImportError as e:
-            logger = self.get_logger()
+            logger = logging.getLogger(__name__)
             logger.error(f"Failed to import signals module: {e}", exc_info=True)
