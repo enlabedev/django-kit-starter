@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from ..tools.constance import *  # noqa
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+USER_PASSWORD_DEFAULT = config("USER_PASSWORD_DEFAULT", default="")
 DOTENV_PATH = BASE_DIR / ".env"
 load_dotenv(DOTENV_PATH)
 
@@ -60,6 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.middleware.UserIPMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -88,6 +89,11 @@ DATABASES = {
         default=config("DATABASE_URL", default="sqlite:///db.sqlite3")
     )
 }
+AUTHENTICATION_BACKENDS = [
+    "apps.core.auth_backend.CustomModelBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -167,3 +173,6 @@ UNFOLD = {
         },
     },
 }
+
+
+AUTH_USER_MODEL = "core.User"
