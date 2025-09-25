@@ -46,6 +46,3 @@ PASSWORD_HASHERS = [
 ]
 
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)  # noqa
-
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = False
