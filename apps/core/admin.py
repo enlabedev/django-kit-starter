@@ -25,7 +25,7 @@ from .services import bulk_block, bulk_restore, bulk_soft_delete, bulk_unblock
 admin.site.unregister(Group)
 
 
-class MixinActionAdnmin(SimpleHistoryAdmin, ModelAdmin):
+class MixinActionAdmin(SimpleHistoryAdmin, ModelAdmin):
     actions = ["export_excel"]
 
     @action(description=_("Export to Excel"), url_path="export-excel")
@@ -98,7 +98,7 @@ class MixinActionAdnmin(SimpleHistoryAdmin, ModelAdmin):
     action_buttons.short_description = _("Actions")
 
 
-class BaseSimpleAdmin(MixinActionAdnmin):
+class BaseSimpleAdmin(MixinActionAdmin):
     """
     Base admin for simple models with basic audit fields.
     """
@@ -115,7 +115,7 @@ class BaseSimpleAdmin(MixinActionAdnmin):
         return actions
 
 
-class BaseAuditAdmin(MixinActionAdnmin):
+class BaseAuditAdmin(MixinActionAdmin):
     """
     Base admin with audit functionalities and custom actions.
     """
@@ -136,7 +136,7 @@ class BaseAuditAdmin(MixinActionAdnmin):
         "block_selected",
         "unblock_selected",
         "restore_selected",
-        *MixinActionAdnmin.actions,
+        *MixinActionAdmin.actions,
     ]
 
     list_display = ("action_buttons",)

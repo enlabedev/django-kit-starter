@@ -87,6 +87,9 @@ def bulk_restore(queryset: models.QuerySet, user: User) -> int:
 
 @transaction.atomic
 def bulk_block(queryset: models.QuerySet, user: User) -> int:
+    """
+    Performs a bulk block operation on a QuerySet.
+    """
     rows_updated = queryset.blocked(user)
     return rows_updated
 

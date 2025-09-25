@@ -6,4 +6,8 @@ class CoreConfig(AppConfig):
     name = "apps.core"
 
     def ready(self):
-        import apps.core.signals  # noqa
+        try:
+            import apps.core.signals  # noqa: F401
+        except ImportError as e:
+            logger = self.get_logger()
+            logger.error(f"Failed to import signals module: {e}", exc_info=True)
