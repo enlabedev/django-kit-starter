@@ -42,13 +42,10 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
-    "apps.store.apps.StoreConfig",
+    "apps.peoples.apps.PeoplesConfig",
 ]
 
-THIRD_PARTY_APPS = [
-    "simple_history",
-    "constance",
-]
+THIRD_PARTY_APPS = ["simple_history", "constance", "djmoney"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 

@@ -8,7 +8,7 @@ from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.core.models import AuditModel
+from apps.core.models.base import AuditModel
 
 from .choices import OrderStatus
 from .managers import CategoryManager, OrderManager, ProductManager
@@ -1087,8 +1087,6 @@ class Coupon(AuditModel):
     def clean(self):
         """Validate the coupon data."""
         super().clean()
-
-        # Validate percentage discounts
         if self.discount_type == self.PERCENTAGE:
             if self.discount_value > 100:
                 raise ValidationError(
@@ -1098,8 +1096,6 @@ class Coupon(AuditModel):
                         )
                     }
                 )
-
-        # Validate maximum discount for percentage types
         if (
             self.discount_type == self.PERCENTAGE
             and self.maximum_discount_amount is not None
@@ -1115,31 +1111,19 @@ class Coupon(AuditModel):
     def is_valid(self, order: Optional[Order] = None) -> bool:
         """
         Check if the coupon is currently valid.
-
-        Args:
-            order: Optional order to validate against
-
-        Returns:
-            bool: True if the coupon is valid
         """
         now = timezone.now()
-
-        # Basic validity checks
         if not self.active:
             return False
 
         if not (self.valid_from <= now <= self.valid_to):
             return False
 
-        # Check usage limit
         if self.usage_limit and self.usage_count >= self.usage_limit:
             return False
 
-        # Check minimum order amount
         if order and order.total_amount < self.minimum_order_amount:
             return False
-
-        # Check category/product applicability
         if order and self.applicable_categories.exists():
             if not order.items.filter(
                 product__category__in=self.applicable_categories.all()
@@ -1157,12 +1141,6 @@ class Coupon(AuditModel):
     def get_discount_amount(self, order_total: Decimal) -> Decimal:
         """
         Calculate the discount amount for a given order total.
-
-        Args:
-            order_total: The total amount of the order
-
-        Returns:
-            Decimal: The discount amount to be applied
         """
         if not self.is_valid():
             return Decimal("0.00")
@@ -1172,7 +1150,6 @@ class Coupon(AuditModel):
         else:
             discount = self.discount_value
 
-        # Apply maximum discount limit for fixed amount discounts
         if (
             self.discount_type == self.FIXED
             and self.maximum_discount_amount
@@ -1185,12 +1162,6 @@ class Coupon(AuditModel):
     def apply_discount(self, order_total: Decimal) -> Dict[str, Any]:
         """
         Apply the coupon discount to an order total.
-
-        Args:
-            order_total: The total amount of the order
-
-        Returns:
-            dict: Dictionary with 'discounted_total' and 'discount_amount'
         """
         discount_amount = self.get_discount_amount(order_total)
         discounted_total = max(order_total - discount_amount, Decimal("0.00"))
@@ -1208,12 +1179,6 @@ class Coupon(AuditModel):
     def can_be_used_by_customer(self, user: User) -> bool:
         """
         Check if the coupon can be used by a specific customer.
-
-        Args:
-            user: The customer to check
-
-        Returns:
-            bool: True if the customer can use this coupon
         """
         if not self.single_use_per_customer:
             return True

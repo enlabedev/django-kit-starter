@@ -1,7 +1,8 @@
 from decimal import Decimal
 
-from core.management import BaseManager
 from django.db import models
+
+from apps.core.managers import BaseManager
 
 from .querysets import CategoryQuerySet, OrderQuerySet, ProductQuerySet
 

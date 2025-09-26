@@ -1,5 +1,6 @@
-from core.querysets import BaseQuerySet
 from django.db import models
+
+from apps.core.querysets import BaseQuerySet
 
 
 class CategoryQuerySet(BaseQuerySet):

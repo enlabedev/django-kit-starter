@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
-from .managers import BaseManager
+from ..managers import BaseManager
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +147,7 @@ class SimpleModel(models.Model):
     """
 
     description = models.CharField(_("Description"), max_length=250)
+    is_active = models.BooleanField(_("Is active"), default=True, db_index=True)
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated at"), auto_now=True)
     deleted_at = models.DateTimeField(_("Deleted at"), null=True, blank=True)
@@ -158,21 +159,3 @@ class SimpleModel(models.Model):
     class Meta:
         abstract = True
         ordering = ["description"]
-
-
-class Profile(AuditModel):
-    """
-    One-to-one profile model to store extra user data.
-    This is preferred over adding many fields to the User model directly.
-    """
-
-    user = models.OneToOneField(
-        User, on_delete=models.PROTECT, related_name="profile"
-    )
-    bio = models.TextField(blank=True, null=True)
-    avatar = models.ImageField(
-        upload_to="images/avatars/", null=True, blank=True
-    )
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile"

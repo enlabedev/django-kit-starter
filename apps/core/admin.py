@@ -19,7 +19,7 @@ from unfold.forms import (
     UserCreationForm,
 )
 
-from .models import Profile, User
+from .models.base import User
 from .services import bulk_block, bulk_restore, bulk_soft_delete, bulk_unblock
 
 admin.site.unregister(Group)
@@ -335,32 +335,3 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     pass
-
-
-@admin.register(Profile)
-class ProfileAdmin(ModelAdmin):
-    """
-    Admin configuration for the Profile model
-    """
-
-    list_display = (
-        "user",
-        "bio",
-        "avatar",
-    )
-    search_fields = ("user__username", "user__email", "bio", "avatar")
-    list_filter = ("user__is_active", "user__is_staff")
-    ordering = ("-user__date_joined",)
-
-    fieldsets = (
-        (
-            _("User Information"),
-            {
-                "fields": (
-                    "user",
-                    "bio",
-                    "avatar",
-                )
-            },
-        ),
-    )

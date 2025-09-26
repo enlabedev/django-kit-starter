@@ -1,6 +1,6 @@
 from django.db import models, transaction
 
-from .models import BaseModel, User
+from .models.base import BaseModel, User
 
 
 @transaction.atomic

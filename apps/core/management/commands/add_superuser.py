@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext as _
 
-from apps.core.models import Profile
+from apps.core.models.base import Profile
 
 
 class Command(BaseCommand):
